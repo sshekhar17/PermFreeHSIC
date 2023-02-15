@@ -1,0 +1,83 @@
+% This file was created with tikzplotlib v0.10.1.
+\begin{tikzpicture}
+
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{lightgray204}{RGB}{204,204,204}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+
+\begin{axis}[
+height=\figheight,
+legend cell align={left},
+legend style={
+  fill opacity=0.8,
+  draw opacity=1,
+  text opacity=1,
+  at={(0.03,0.97)},
+  anchor=north west,
+  draw=lightgray204
+},
+tick align=outside,
+tick pos=left,
+title={Power vs Sample Size},
+width=\figwidth,
+x grid style={darkgray176},
+xlabel={Sample-size (n)},
+xmin=-4.5, xmax=314.5,
+xtick style={color=black},
+y grid style={darkgray176},
+ylabel={Power},
+ymin=0.0214, ymax=1.0466,
+ytick style={color=black}
+]
+\addplot [semithick, steelblue31119180]
+table {%
+10 0.252
+25 0.468
+40 0.64
+55 0.772
+71 0.784
+86 0.856
+101 0.948
+116 0.976
+132 0.98
+147 0.996
+162 1
+177 1
+193 1
+208 1
+223 1
+238 1
+254 1
+269 1
+284 1
+300 1
+};
+\addlegendentry{HSIC-perm}
+\addplot [semithick, darkorange25512714]
+table {%
+10 0.068
+25 0.1
+40 0.16
+55 0.236
+71 0.236
+86 0.356
+101 0.48
+116 0.572
+132 0.664
+147 0.752
+162 0.868
+177 0.9
+193 0.912
+208 0.944
+223 0.972
+238 0.984
+254 0.992
+269 0.996
+284 1
+300 0.996
+};
+\addlegendentry{x-HSIC}
+\end{axis}
+
+\end{tikzpicture}
