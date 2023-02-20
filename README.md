@@ -12,10 +12,10 @@ pip install -r requirements.txt`
 * To reproduce the figures run the scripts 
 
 ```
-# generate the figures under the null
+# generate the figures under the alternative
 run_alt_experiments.sh
 
-# generate the figures under the alternative 
+# generate the figures under the null 
 run_null_experiments.sh
 ```
 
