@@ -23,10 +23,13 @@ def crossHSIC_test(XX, YY, kernel_X=None, kernel_Y=None,
     if kernel_X is None:
         bwX = median_heuristic(Z=XX)
         kernelX = partial(RBFkernel, bw=bwX)
+    else:
+        kernelX = kernel_X
     if kernel_Y is None:
         bwY = median_heuristic(Z=YY)
         kernelY = partial(RBFkernel, bw=bwY)
-
+    else:
+        kernelY = kernel_Y
     # compute the kenrel matrices 
     K, L = get_K_L_matrices(XX, YY, kernelX, kernelY)
     # comptue the cross-HSIC statistic 

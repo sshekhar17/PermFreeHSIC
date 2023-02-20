@@ -70,6 +70,8 @@ def compare_power(Source=None,
 
     if seed is not None:
         np.random.seed(seed) 
+    else:
+        seed = int(time()%10000)
 
     if not parallel:
         for trial in tqdm(range(num_trials)):
@@ -217,6 +219,7 @@ if __name__=='__main__':
         fig_dir = './figures/alt'
         parallel = False
         plot_time_comparison=True
+        seed = int(time()%10000)
     else:
         d = args.d 
         n = args.n
@@ -237,14 +240,18 @@ if __name__=='__main__':
         fig_dir = args.fig_dir
         parallel = args.parallel
         plot_time_comparison=args.plot_time_comparison
+        seed = args.seed
 
     #####
+    if seed is None:
+        seed = int(time()%10000)
+
     if expt_type=='HSIC':
         temp = f'kernel_{kernel_type}'
     else:
         temp = f'pX_{pX}_pY_{pY}'
     print('='*80 + '\n')
-    print(rf'Starting {expt_type} Experiment: $\epsilon$={epsilon}'+temp)
+    print(rf'Starting {expt_type} Experiment: $\epsilon$ = {epsilon}'+temp + f"seed: {seed}")
     print('='*80 + '\n')
     ####
 
@@ -260,16 +267,22 @@ if __name__=='__main__':
         if kernel_type is None:
             kernel_type = 'RBF+Median'
         if save_fig:
-            figname = f'Power_HSIC_epsilon_{epsilon}_n_{n}_d_{d}_kernel_{kernel_type}'
+            if plot_time_comparison:
+                figname = f'RunningTime_HSIC_epsilon_{epsilon}_n_{n}_d_{d}_kernel_{kernel_type}_seed_{seed}'
+            else:
+                figname = f'Power_HSIC_epsilon_{epsilon}_n_{n}_d_{d}_kernel_{kernel_type}_seed_{seed}'
             figname = figname.replace('.', '_')
     else:
         dcov_stat_func = partial(distance_covariance_test, return_stat=True, pX=pX, pY=pY)
-        tests_dict = {'dcov-perm':permutation_test, 'x-dcov':distance_covaraince_DA_test} 
-        kwargs_dict = {'dcov-perm':{'stat_func':dcov_stat_func, 'num_perms':num_perms}, 
-                    'x-dcov':{'pX':pX, 'pY':pY}
+        tests_dict = {'dCov-perm':permutation_test, 'x-dCov':distance_covaraince_DA_test} 
+        kwargs_dict = {'dCov-perm':{'stat_func':dcov_stat_func, 'num_perms':num_perms}, 
+                    'x-dCov':{'pX':pX, 'pY':pY}
                     } 
         if save_fig:
-            figname = f'Power_dCov_epsilon_{epsilon}_n_{n}_d_{d}_pX_{pX}_pY_{pY}'
+            if plot_time_comparison:
+                figname = f'RunningTime_dCov_epsilon_{epsilon}_n_{n}_d_{d}_pX_{pX}_pY_{pY}_seed_{seed}'
+            else:
+                figname = f'Power_dCov_epsilon_{epsilon}_n_{n}_d_{d}_pX_{pX}_pY_{pY}_seed_{seed}'
             figname = figname.replace('.', '_')
     ######################################################################## 
     ### Run the experiment 
