@@ -13,6 +13,6 @@ ColorsDict = {
 markersDict = {
     'x-HSIC':'o', 
     'HSIC-perm':'^', 
-    'x-dCov':'0', 
+    'x-dCov':'o', 
     'dCov-perm':'^'
 }
