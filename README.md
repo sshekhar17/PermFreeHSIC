@@ -13,10 +13,10 @@ pip install -r requirements.txt`
 
 ```
 # generate the figures under the alternative
-run_alt_experiments.sh
+./run_alt_experiments.sh
 
 # generate the figures under the null 
-run_null_experiments.sh
+./run_null_experiments.sh
 ```
 
 ### Structure 
@@ -25,6 +25,7 @@ run_null_experiments.sh
     * cross-HSIC test 
     * cross-dCov test 
     * HSIC permutation test 
-    * HSIC dCov test 
+    * dCov permutation test
+    * dCov test calibrated according to Szekely 2007, Theorem 6.
 * The file `utils.py` contains some helper functions 
 * The file `crossHSIC.py` implements the cross-HSIC statistic 
