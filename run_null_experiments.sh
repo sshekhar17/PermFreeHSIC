@@ -1,4 +1,4 @@
-#!/usr/bin/bash 
+#!/bin/bash 
 SEED=2023 
 
 function update_seed(){
