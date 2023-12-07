@@ -288,7 +288,7 @@ def getH(XX, YY, kernelX, kernelY):
             H[i][j] = hfunc(i, j) 
     return H
 
-def get_quartic_studentized_cHSIC(XX, YY, kernelX=None, kernelY=None, num_pts_bw):
+def get_quartic_studentized_cHSIC(XX, YY, kernelX=None, kernelY=None, num_pts_bw=20):
     if kernelX is None:
         bwX = median_heuristic(XX[:num_pts_bw])
         kernelX = partial(RBFkernel, bw=bwX)
