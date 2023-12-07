@@ -7,7 +7,8 @@ ColorsDict = {
     'x-HSIC':palette[0], 
     'HSIC-perm':palette[1], 
     'x-dCov':palette[2], 
-    'dCov-perm':palette[3]
+    'dCov-perm':palette[3], 
+    'predicted':palette[4]
 }
 
 markersDict = {

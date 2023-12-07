@@ -1,5 +1,5 @@
 from math import log, sqrt, ceil
-
+import scipy.stats as stats
 import numpy as np 
 from scipy.spatial.distance import cdist, pdist 
 from scipy.stats import t as tdist
@@ -228,6 +228,22 @@ def generate_seeds(n=10, start=1234):
 
 def is_pos_def(x):
     return np.all(np.linalg.eigvals(x) > 0)
+
+def predict_power(Power, alpha=0.05, factor=2):
+    """
+        Predict the power of MMD test using the power of cMMD test
+        \Phi( z_{\alpha} + \sqrt{2}( \Phi^{-1}(Power) - z_{\alpha}))
+    """
+    normal = stats.norm
+    z_a = normal.ppf(alpha) 
+    sqrt_factor = sqrt(factor)
+    temp = z_a + sqrt_factor*np.array([
+        (normal.ppf(p) - z_a) for p in Power
+    ])
+    power = normal.cdf(temp) 
+    return power
+
+
 
 if __name__=='__main__':
     generate_seeds(n=10)    

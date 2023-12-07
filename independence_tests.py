@@ -12,21 +12,28 @@ from scipy.spatial.distance import cdist, pdist
 import matplotlib.pyplot as plt
 
 def crossHSIC_test(XX, YY, kernel_X=None, kernel_Y=None,
-                    alpha=0.05):
+                    alpha=0.05, num_pts_bw=10):
     """
     Cross-HSIC test based on sample-splitting and 
     studentization. 
     """
     n = len(XX) 
     assert len(YY)==n
+    
+    if n>num_pts_bw:
+        XX_bw = XX[:num_pts_bw]
+        YY_bw = YY[:num_pts_bw]
 
+        XX = XX[num_pts_bw:]
+        YY = YY[num_pts_bw:]
+        n -= num_pts_bw
     if kernel_X is None:
-        bwX = median_heuristic(Z=XX)
+        bwX = median_heuristic(Z=XX_bw)
         kernelX = partial(RBFkernel, bw=bwX)
     else:
         kernelX = kernel_X
     if kernel_Y is None:
-        bwY = median_heuristic(Z=YY)
+        bwY = median_heuristic(Z=YY_bw)
         kernelY = partial(RBFkernel, bw=bwY)
     else:
         kernelY = kernel_Y
@@ -48,8 +55,8 @@ def crossHSIC_test(XX, YY, kernel_X=None, kernel_Y=None,
 
 
 
-def distance_covaraince_DA_test(XX, YY, pX=2,
-                                pY=2, alpha=0.05):
+def distance_covaraince_DA_test(XX, YY, pX=2, pY=2,
+                                 alpha=0.05, return_stat=False):
     """
     The dimension-agnostic version of the distance-
     covariance test
@@ -72,9 +79,12 @@ def distance_covaraince_DA_test(XX, YY, pX=2,
         var = 1.0 # set it to some  default value
     # get the statistic value 
     stat = cHSIC*sqrt(n/(2*var))
-    # get the rejection threshold 
-    th = stats.norm.ppf(1-alpha) 
-    return 1.0*(stat>th)
+    if return_stat:
+        return stat 
+    else:
+        # get the rejection threshold 
+        th = stats.norm.ppf(1-alpha) 
+        return 1.0*(stat>th)
 
 
 
@@ -106,7 +116,7 @@ def distance_covariance_test(XX, YY, pX=2, pY=2, alpha=0.05,
     stat = (V2 * n) / S2  
     if return_stat:
         # return only the statistic
-        return V2 
+        return stat 
     else:
         ####NOTE: In practice, this approach often seems 
         #### to be very conservative in the n<1000 regime #####

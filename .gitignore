@@ -3,5 +3,6 @@ figures/*
 *.out 
 *.pyc
 *.tex
+.ipynb* 
 
 

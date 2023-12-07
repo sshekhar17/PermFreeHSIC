@@ -5,7 +5,7 @@ from functools import partial
 import numpy as np 
 from independence_tests import * 
 import matplotlib.pyplot as plt 
-from utils import CreateDependentGaussianSource, initialize_kernel
+from utils import CreateDependentGaussianSource, initialize_kernel, predict_power
 import tikzplotlib as tpl 
 from time import time 
 from constants import ColorsDict, markersDict
@@ -24,7 +24,8 @@ def compare_power(Source=None,
                         figname=None, 
                         parallel=False, 
                         seed=None, 
-                        plot_time_comparison=False): 
+                        plot_time_comparison=False, 
+                        predicted_power=False): 
     """
         Compare the power of different tests of independence 
 
@@ -129,6 +130,15 @@ def compare_power(Source=None,
         plt.figure() 
         for test in tests_dict: 
             plt.plot(NN, PowerDict[test], label=test, color=ColorsDict[test])
+        # plot the predicted power 
+        if predicted_power:
+            if 'x-HSIC' in tests_dict:
+                Power_ = PowerDict['x-HSIC'] 
+            elif 'x-dCov' in tests_dict:
+                Power_ = PowerDict['x-dCov'] 
+            PredictedPower = predict_power(Power_, alpha=alpha, factor=2)
+            plt.plot(NN, PredictedPower, label='predicted',
+                        color=ColorsDict['predicted'])
 
         plt.xlabel('Sample-size (n)', fontsize=13)
         plt.ylabel('Power', fontsize=13)
@@ -190,6 +200,7 @@ def get_args():
     parser.add_argument('-s', '--seed', default=None, type=int)
     parser.add_argument('--fig_dir', default='./figures/alt')
     parser.add_argument('-t','--plot_time_comparison', action='store_true')
+    parser.add_argument('--predicted', action='store_true')
     args = parser.parse_args()
 
     if not os.path.exists(args.fig_dir):
@@ -220,6 +231,7 @@ if __name__=='__main__':
         parallel = False
         plot_time_comparison=True
         seed = int(time()%10000)
+        predicted = False
     else:
         d = args.d 
         n = args.n
@@ -241,6 +253,7 @@ if __name__=='__main__':
         parallel = args.parallel
         plot_time_comparison=args.plot_time_comparison
         seed = args.seed
+        predicted=args.predicted
 
     #####
     if seed is None:
@@ -296,6 +309,7 @@ if __name__=='__main__':
                     save_fig=save_fig, 
                     figname=figname, 
                     parallel=parallel, 
-                    plot_time_comparison=plot_time_comparison
+                    plot_time_comparison=plot_time_comparison, 
+                    predicted_power=predicted
                 )
     ######################################################################## 
