@@ -190,12 +190,12 @@ def get_variance(K, L, cHSIC):
 
     return variance 
 
-def get_HSIC(XX, YY, kernel_X=None, kernel_Y=None):
+def get_HSIC(XX, YY, kernel_X=None, kernel_Y=None, num_pts_bw=20):
     if kernel_X is None:
-        bwX = median_heuristic(Z=XX)
+        bwX = median_heuristic(Z=XX[:num_pts_bw])
         kernel_X = partial(RBFkernel, bw=bwX)
     if kernel_Y is None:
-        bwY = median_heuristic(Z=YY)
+        bwY = median_heuristic(Z=YY[:num_pts_bw])
         kernel_Y = partial(RBFkernel, bw=bwY)
     # some preprocessing 
     n = len(XX)
@@ -211,12 +211,12 @@ def get_HSIC(XX, YY, kernel_X=None, kernel_Y=None):
 
 
 def get_studentized_cross_hsic(XX, YY, kernel_X=None,
-                                kernel_Y=None):
+                                kernel_Y=None, num_pts_bw=20):
     if kernel_X is None:
-        bwX = median_heuristic(Z=XX)
+        bwX = median_heuristic(Z=XX[:num_pts_bw])
         kernel_X = partial(RBFkernel, bw=bwX)
     if kernel_Y is None:
-        bwY = median_heuristic(Z=YY)
+        bwY = median_heuristic(Z=YY[:num_pts_bw])
         kernel_Y = partial(RBFkernel, bw=bwY)
     n = len(XX)
     # compute the kenrel matrices 
@@ -288,12 +288,12 @@ def getH(XX, YY, kernelX, kernelY):
             H[i][j] = hfunc(i, j) 
     return H
 
-def get_quartic_studentized_cHSIC(XX, YY, kernelX=None, kernelY=None):
+def get_quartic_studentized_cHSIC(XX, YY, kernelX=None, kernelY=None, num_pts_bw):
     if kernelX is None:
-        bwX = median_heuristic(XX)
+        bwX = median_heuristic(XX[:num_pts_bw])
         kernelX = partial(RBFkernel, bw=bwX)
     if kernelY is None:
-        bwY = median_heuristic(YY)
+        bwY = median_heuristic(YY[:num_pts_bw])
         kernelY = partial(RBFkernel, bw=bwY)
     # get the H-matrix 
     H = getH(XX, YY, kernelX, kernelY)
@@ -329,7 +329,7 @@ def get_quartic_studentized_cHSIC(XX, YY, kernelX=None, kernelY=None):
 def PlotNullDistribution(n=1000, num_trials=50, d=5, independent=True, 
                         random_seed=None, progress_bar=True, kernelX=None,
                         kernelY=None, savefig=False, figname=None, 
-                        return_stats=False, plot_quartic=False):
+                        return_stats=False, plot_quartic=False, num_pts_bw=20):
     # set the random seed if needed 
     if random_seed is not None:
         np.random.seed(random_seed)
@@ -356,12 +356,12 @@ def PlotNullDistribution(n=1000, num_trials=50, d=5, independent=True,
         X, Y = Source(n) 
         # initialize the kernels if needed
         if kernelX is None:
-            bwX = median_heuristic(X)
+            bwX = median_heuristic(X[:num_pts_bw])
             kernelX_ = partial(RBFkernel, bw=bwX)
         else:
             kernelX_=kernelX 
         if kernelY is None:
-            bwY = median_heuristic(Y)
+            bwY = median_heuristic(Y[:num_pts_bw])
             kernelY_ = partial(RBFkernel, bw=bwY)
         else:
             kernelY_=kernelY 
